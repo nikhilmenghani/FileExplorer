@@ -1,4 +1,6 @@
 package com.example.fileexplorer.ui.view
+
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,20 +16,22 @@ import java.io.File
 
 @Composable
 fun FileExplorerApp(viewModel: FileExplorerViewModel = FileExplorerViewModel()) {
-    FileExplorerScreen(files = viewModel.files)
+    FileExplorerScreen(files = viewModel.files, onFileClick = viewModel::listFiles)
 }
 
 @Composable
-fun FileExplorerScreen(files: List<File>) {
+fun FileExplorerScreen(files: List<File>, onFileClick: (File) -> Unit) {
     LazyColumn {
         items(files) { file ->
-            FileItem(file)
+            FileItem(file, onFileClick)
         }
     }
 }
 
 @Composable
-fun FileItem(file: File) {
+fun FileItem(
+    file: File, onFileClick: (File) -> Unit
+) {
     val color = if (file.isDirectory) {
         Color.Blue
     } else {
@@ -39,6 +43,7 @@ fun FileItem(file: File) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
+            .clickable { onFileClick(file) }
     )
 }
 
