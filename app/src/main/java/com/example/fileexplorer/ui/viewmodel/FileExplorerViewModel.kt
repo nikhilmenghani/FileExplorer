@@ -23,9 +23,8 @@ class FileExplorerViewModel : ViewModel() {
     }
 
     fun goBack() {
-        if (currentDirectory.parentFile != null) {
+        if (currentDirectory.parentFile != null && currentDirectory != Environment.getExternalStorageDirectory()) {
             listFiles(currentDirectory.parentFile!!)
         }
     }
-
 }

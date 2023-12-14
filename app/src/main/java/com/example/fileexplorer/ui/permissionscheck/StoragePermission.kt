@@ -1,11 +1,9 @@
 import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.Settings
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
@@ -14,10 +12,28 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 
-
+@Composable
+fun ValidateAndRunComposable(app: @Composable () -> Unit) {
+    val permissionGranted = remember { mutableStateOf(false) }
+    Column {
+        RequestManageExternalStoragePermission(
+            onPermissionGranted = { granted ->
+                permissionGranted.value = granted
+            }
+        )
+        if (permissionGranted.value) {
+            // Display ListLearning only if the permission is granted
+            app()
+        } else {
+            // Optionally, show a placeholder or message if permission is not granted
+            Text("Permission not granted. Unable to display files.")
+        }
+    }
+}
 
 @Composable
 fun RequestManageExternalStoragePermission(onPermissionGranted: (Boolean) -> Unit) {
