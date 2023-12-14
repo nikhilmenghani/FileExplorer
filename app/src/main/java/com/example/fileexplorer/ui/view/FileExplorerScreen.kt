@@ -1,5 +1,6 @@
 package com.example.fileexplorer.ui.view
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,11 +17,14 @@ import java.io.File
 
 @Composable
 fun FileExplorerApp(viewModel: FileExplorerViewModel = FileExplorerViewModel()) {
-    FileExplorerScreen(files = viewModel.files, onFileClick = viewModel::listFiles)
+    FileExplorerScreen(files = viewModel.files, onFileClick = viewModel::listFiles, onBack = viewModel::goBack)
 }
 
 @Composable
-fun FileExplorerScreen(files: List<File>, onFileClick: (File) -> Unit) {
+fun FileExplorerScreen(files: List<File>, onFileClick: (File) -> Unit, onBack: () -> Unit) {
+    BackHandler() {
+        onBack()
+    }
     LazyColumn {
         items(files) { file ->
             FileItem(file, onFileClick)

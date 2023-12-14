@@ -22,4 +22,10 @@ class FileExplorerViewModel : ViewModel() {
         }
     }
 
+    fun goBack() {
+        if (currentDirectory.parentFile != null) {
+            listFiles(currentDirectory.parentFile!!)
+        }
+    }
+
 }
