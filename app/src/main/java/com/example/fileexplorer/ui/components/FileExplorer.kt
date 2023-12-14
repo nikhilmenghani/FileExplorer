@@ -24,7 +24,7 @@ fun ListFiles() {
     LazyColumn {
         itemsIndexed(
             files
-        ) { index, file ->
+        ) { _, file ->
             Text(
                 text = file.name,
                 fontSize = 24.sp,

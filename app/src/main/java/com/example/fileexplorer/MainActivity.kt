@@ -1,6 +1,5 @@
 package com.example.fileexplorer
 
-import ListFiles
 import RequestManageExternalStoragePermission
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -11,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.example.fileexplorer.ui.theme.FileExplorerTheme
+import com.example.fileexplorer.ui.view.FileExplorerApp
 
 
 class MainActivity : ComponentActivity() {
@@ -36,13 +36,13 @@ class MainActivity : ComponentActivity() {
             )
 
             if (permissionGranted.value) {
+
                 // Display ListLearning only if the permission is granted
-                ListFiles()
+                FileExplorerApp()
             } else {
                 // Optionally, show a placeholder or message if permission is not granted
                 Text("Permission not granted. Unable to display files.")
             }
         }
     }
-
 }
