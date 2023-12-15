@@ -49,6 +49,12 @@ jobs:
       - name: Build APK
         run: ./gradlew assembleRelease
 
+      - name: List all files
+        run: ls -lR .
+
+      - name: List APK directory
+        run: ls -lR app/build
+
       - name: Upload APK to GitHub Release
         uses: softprops/action-gh-release@v1
         with:
