@@ -7,6 +7,14 @@ android {
     namespace = "com.example.fileexplorer"
     compileSdk = 34
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("app/my-release-key.keystore") // Keystore file
+            storePassword = System.getenv("KEYSTORE_PASSWORD")
+            keyAlias = "Nikhil Menghani"
+            keyPassword = System.getenv("KEYSTORE_PASSWORD")
+        }
+    }
     defaultConfig {
         applicationId = "com.example.fileexplorer"
         minSdk = 21
@@ -22,6 +30,7 @@ android {
 
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
