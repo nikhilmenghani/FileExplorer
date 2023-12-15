@@ -16,32 +16,27 @@ jobs:
           java-version: '17'
           distribution: 'zulu'
 
-      - name: Install GitHub CLI
+      - name: Fetch the latest release version
+        id: latest_version
         run: |
-          sudo apt update
-          sudo apt install -y gh
-        env:
-          GH_TOKEN: ${{ secrets.AUTH }}
+          LATEST_VERSION=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .name)
+          echo "LATEST_VERSION=$LATEST_VERSION"
+          echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
 
-      - name: Increment Version
-        id: versioning
+      - name: Increment the version
+        id: increment_version
         run: |
-          LATEST_TAG=$(gh release list --limit 1 | cut -f1)
-          if [[ -z "$LATEST_TAG" ]]; then
-            # No release found, start with 0.2
-            echo "NEW_TAG=v0.2" >> $GITHUB_ENV
+          LATEST_VERSION=$(echo $LATEST_VERSION | sed 's/v//') # Remove 'v' if present
+          IFS='.' read -r V_MAJOR V_MINOR V_PATCH <<< "$LATEST_VERSION"
+          if [[ $V_MINOR -eq 99 ]]; then
+            V_MAJOR=$((V_MAJOR + 1))
+            V_MINOR=0
           else
-            # Split the tag into parts
-            VERSION_BITS=(${LATEST_TAG//./ })
-
-            # Increment the minor version
-            VNUM1=${VERSION_BITS[0]}
-            VNUM2=$((${VERSION_BITS[1]} + 1))
-
-            # Create new tag
-            NEW_TAG="$VNUM1.$VNUM2"
-            echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+            V_MINOR=$((V_MINOR + 1))
           fi
+          NEW_VERSION="$V_MAJOR.$V_MINOR"
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          echo "::set-output name=new_version::$NEW_VERSION"
 
       - name: Set Executable Permission for Gradlew
         run: chmod +x ./gradlew
@@ -62,8 +57,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: app/build/outputs/apk/release/app-release.apk
-          tag_name: ${{ env.NEW_TAG }}
-          release_name: Release ${{ env.NEW_TAG }}
+          tag_name: v${{ steps.increment_version.outputs.new_version }}
+          release_name: ${{ steps.increment_version.outputs.new_version }}
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.AUTH }}
