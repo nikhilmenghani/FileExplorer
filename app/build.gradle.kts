@@ -11,7 +11,7 @@ android {
         create("release") {
             storeFile = file("../my-release-key.keystore") // Keystore file
             storePassword = System.getenv("KEYSTORE_PASSWORD")
-            keyAlias = "Nikhil Menghani"
+            keyAlias = "myKeyAlias"
             keyPassword = System.getenv("KEYSTORE_PASSWORD")
         }
     }
