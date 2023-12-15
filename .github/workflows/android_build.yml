@@ -59,12 +59,22 @@ jobs:
         run: ls -lR app/build/outputs/apk/release
 
       - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.AUTH }}
+        with:
+          tag_name: ${{ env.NEW_TAG }}
+          release_name: ${{ steps.increment_version.outputs.new_version }}
+          draft: false
+          prerelease: false
+
+      - name: Create Release with Files
         uses: softprops/action-gh-release@v1
         with:
           files: app/build/outputs/apk/release/app-release.apk
           tag_name: ${{ env.NEW_TAG }}
-          # If 'release_name' is invalid, remove it or replace with the correct parameter
+          release_name: Release ${{ env.NEW_TAG }}
           prerelease: false
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.AUTH }}
 
