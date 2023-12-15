@@ -49,6 +49,12 @@ jobs:
       - name: Decode Keystore
         run: echo "${{ secrets.KEYSTORE }}" | base64 -d > my-release-key.keystore
 
+      - name: List all files
+        run: ls -lR .
+
+      - name: List APK directory
+        run: ls -lR app/build
+
       - name: Build and Sign APK
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
