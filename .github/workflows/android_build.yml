@@ -28,8 +28,8 @@ jobs:
         run: |
           LATEST_TAG=$(gh release list --limit 1 | cut -f1)
           if [[ -z "$LATEST_TAG" ]]; then
-            # No release found, start with 0.1
-            echo "NEW_TAG=v0.1" >> $GITHUB_ENV
+            # No release found, start with 0.2
+            echo "NEW_TAG=v0.2" >> $GITHUB_ENV
           else
             # Split the tag into parts
             VERSION_BITS=(${LATEST_TAG//./ })
@@ -57,16 +57,6 @@ jobs:
 
       - name: List APK directory
         run: ls -lR app/build/outputs/apk/release
-
-      - name: Create Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.AUTH }}
-        with:
-          tag_name: ${{ env.NEW_TAG }}
-          release_name: ${{ steps.increment_version.outputs.new_version }}
-          draft: false
-          prerelease: false
 
       - name: Create Release with Files
         uses: softprops/action-gh-release@v1
