@@ -46,7 +46,13 @@ jobs:
       - name: Set Executable Permission for Gradlew
         run: chmod +x ./gradlew
 
-      - name: Build APK
+      - name: Decode Keystore
+        run: echo "${{ secrets.KEYSTORE }}" | base64 -d > my-release-key.keystore
+
+      - name: Build and Sign APK
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         run: ./gradlew assembleRelease
 
       - name: List all files
