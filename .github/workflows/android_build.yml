@@ -55,9 +55,6 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         run: ./gradlew assembleRelease
 
-      - name: List all files
-        run: ls -lR .
-
       - name: List APK directory
         run: ls -lR app/build/outputs/apk/release
 
